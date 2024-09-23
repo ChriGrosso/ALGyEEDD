@@ -9,20 +9,18 @@ def dataprep(n):
     
     v = max(data) + 1 #¿pq en el anexo le suma +1? para que devuelva un elemento que no está dentro de la lista
     
-    return (data, v)
+    return data, v
 
-def two_sum(info):
-    lista=info[0]
-    n=info[1]
+def two_sum(lst,n):
     cont1=0
     cont2=1
-    long=len(lista)
+    long=len(lst)
     
     while cont1!=long and cont2!=long:
-        v1=lista[cont1]
-        v2=lista[cont2]
+        v1=lst[cont1]
+        v2=lst[cont2]
         res=v1+v2
-        if (res != n) and (cont2 == len(lista)-1):
+        if (res != n) and (cont2 == len(lst)-1):
             cont1+=1
             cont2=cont1+1
         elif res == n:
@@ -32,11 +30,31 @@ def two_sum(info):
     return False
 
 def time_measure(f, dataprep, NList, Nrep, Nstat):
-    t1=time.ctime()
-    input = dataprep(10)
-    res = []
-    
-lista=dataprep(5)
+    res=[]
+
+    for n in NList:
+        partial=[]
+        for s in range(Nstat):
+            input1,input2  = dataprep(n)
+            t1 = time.time()
+            for i in range(Nrep):
+                _ = f(input1,input2)
+            t2 = time.time()
+            partial += [ float(t1-t2)/float(Nrep) ]
+        res += [partial]
+        ave = []
+        var = []
+        worst = []
+    for k in range(len(NList)):
+        ave += [ sum(res[k])/float(Nstat) ]
+        worst += [max(res[k])]
+    #for k in range(len(NList)):
+    #    var += [ sum( [(res[k][u]-ave[k])**2 for u in range(Nstat)]/float(Nstat)) ]
+    return res
+
+lista,n=dataprep(5)
 print(lista)
-print(two_sum(lista))
+print(two_sum(lista,n))
+print(time.time())
+print(time_measure(two_sum,dataprep,[10,100,15],1,1))
 
