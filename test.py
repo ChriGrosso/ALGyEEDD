@@ -40,7 +40,7 @@ def time_measure(f, dataprep, NList, Nrep, Nstat):
             for i in range(Nrep):
                 _ = f(input1,input2)
             t2 = time.time()
-            partial += [ float(t1-t2)/float(Nrep) ]
+            partial += [ float(t2-t1)/float(Nrep) ]
         res += [partial]
         ave = []
         var = []
@@ -48,13 +48,13 @@ def time_measure(f, dataprep, NList, Nrep, Nstat):
     for k in range(len(NList)):
         ave += [ sum(res[k])/float(Nstat) ]
         worst += [max(res[k])]
-    #for k in range(len(NList)):
-    #    var += [ sum( [(res[k][u]-ave[k])**2 for u in range(Nstat)]/float(Nstat)) ]
-    return res
+    for k in range(len(NList)):
+        var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
+    return ave,var
 
 lista,n=dataprep(5)
 print(lista)
 print(two_sum(lista,n))
 print(time.time())
-print(time_measure(two_sum,dataprep,[10,100,15],1,1))
+print(time_measure(two_sum,dataprep,[1000000],1,1))
 
