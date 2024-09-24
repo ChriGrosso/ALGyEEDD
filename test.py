@@ -11,16 +11,16 @@ def dataprep_ts(n):
     
     return data, v
 
-def two_sum(lst,n):
+def two_sum(h,n):
     cont1=0
     cont2=1
-    long=len(lst)
+    long=len(h)
     
     while cont1!=long and cont2!=long:
-        v1=lst[cont1]
-        v2=lst[cont2]
+        v1=h[cont1]
+        v2=h[cont2]
         res=v1+v2
-        if (res != n) and (cont2 == len(lst)-1):
+        if (res != n) and (cont2 == len(h)-1):
             cont1+=1
             cont2=cont1+1
         elif res == n:
@@ -51,13 +51,58 @@ def time_measure(f, dataprep_ts, NList, Nrep, Nstat):
     for k in range(len(NList)):
         var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
     return list(zip(ave, var))
-    
+
+############
+# II. Heap # 
+############
+
+#II.A.1
+def heap_heapify(h,i):
+    if i >= len(h):
+        return h
+    small=h[i]
+    indx=i
+    izq=(2*i)+1 #Indx Hijo Izquierdo
+    der=(2*i)+2 #Indx Hijo Derecho
+    if izq < len(h) and h[izq]<small: 
+        small=h[izq]
+        indx=izq
+    if der < len(h) and h[der]<small: 
+        small=h[der]
+        indx=der
+    if indx == i:
+        return h
+    h[i],h[indx]=h[indx],h[i]
+    heap_heapify(h,indx)
+
+#II.A.2
+def heap_insert(h, key):
+    h += [key]
+    k=len(h)-1
+    while k > 0:
+        p=int((k-1)/2)
+        if h[k] > h[p]:
+            return h
+        h[k], h[p] = h[p], h[k]
+        k=p
+
+#II.A.3
+
+def heap_extract(h):
+    u=h[0]
+    h[0]=h[-1]
+    h=h[:-1]
+    h =heap_heapify(h, 0)
+    return h,u #ritorno lista modificata e elemento estratto
+
+
+
+
 
 #Main
 lista = list(range(10, 10001, 100))
 #print(lista)
 
-#print(time_measure(two_sum,dataprep_ts,lista,2,2))
 print(time_measure(two_sum,dataprep_ts,lista,1000,100))
 
 
