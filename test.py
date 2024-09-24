@@ -1,7 +1,7 @@
 import random
 import time
 
-def dataprep(n):
+def dataprep_ts(n):
     data = []
     for i in range(n):
         data += [random.randint(0,n)]
@@ -29,13 +29,13 @@ def two_sum(lst,n):
             cont2+=1
     return False
 
-def time_measure(f, dataprep, NList, Nrep, Nstat):
+def time_measure(f, dataprep_ts, NList, Nrep, Nstat):
     res=[]
 
     for n in NList:
         partial=[]
         for s in range(Nstat):
-            input1,input2  = dataprep(n)
+            input1,input2  = dataprep_ts(n)
             t1 = time.time()
             for i in range(Nrep):
                 _ = f(input1,input2)
@@ -50,11 +50,15 @@ def time_measure(f, dataprep, NList, Nrep, Nstat):
         worst += [max(res[k])]
     for k in range(len(NList)):
         var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
-    return ave,var
+    return list(zip(ave, var))
+    
 
-lista,n=dataprep(5)
-print(lista)
-print(two_sum(lista,n))
-print(time.time())
-print(time_measure(two_sum,dataprep,[1000000],1,1))
+#Main
+lista = list(range(10, 10001, 100))
+#print(lista)
+
+#print(time_measure(two_sum,dataprep_ts,lista,2,2))
+print(time_measure(two_sum,dataprep_ts,lista,1000,100))
+
+
 
