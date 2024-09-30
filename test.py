@@ -31,12 +31,13 @@ def two_sum(h,n):
     return False
 
 #1.A.1
-def time_measure(f, dataprep_ts, NList, Nrep, Nstat):
+def time_measure(f, dataprep, NList, Nrep, Nstat):
+    print(f)
     res=[]
     for n in NList:
         partial=[]
         for s in range(Nstat):
-            input1,input2  = dataprep_ts(n)
+            input1,input2  = dataprep(n)
             t1 = time.time()
             for i in range(Nrep):
                 _ = f(input1,input2)
@@ -123,17 +124,18 @@ def heap_extract(h):
     return h,u #ritorno lista modificata e elemento estratto
 
 #II.A.3
-
-
-
-
-
+def heap_create(h):
+    for k in range(len(h),-1,-1,-1):
+        heap_heapify(h,k)
 
 #Main
 lista = list(range(10, 10001, 100))
 #print(lista)
 
 print(time_measure(two_sum,dataprep_ts,lista,1000,100))
+
+lista2 = list(range(0,20,1))
+print(lista2)
 
 
 
