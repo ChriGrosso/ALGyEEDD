@@ -13,16 +13,16 @@ def dataprep_ts(n):
     return data, v
 
 def dataprep_bs(n):
-    lst = []
+    data = []
     for i in range(n):
         data += [random.randint(0,n)]
     idx = random.randint(0,n-1)
     
     v = max(data) + 1 #¿pq en el anexo le suma +1? para que devuelva un elemento que no está dentro de la lista
-    lft = lst[0]
-    rgt = lst[n-1]
+    lft = 0
+    rgt = n-1
 
-    return lst, lft, rgt, v
+    return data, lft, rgt, v
 
 #1.A.2
 def two_sum(h,n):
@@ -164,10 +164,10 @@ def heap_extract(h):
 
 
 #Main
-#lista = list(range(10, 10001, 100))
-#print(lista)
+lista = list(range(10, 10001, 100))
+print(lista)
 
-#print(time_measure(two_sum,dataprep_ts,lista,1000,100))
+print(time_measure(itr_bs,dataprep_bs,lista,1000,100))
 
 
 
