@@ -1,6 +1,6 @@
 import random
 import time
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 def dataprep_ts(n):
     data = []
@@ -65,7 +65,7 @@ def time_measure(f, dataprep, NList, Nrep, Nstat):
             worst += [max(res[k])]
         for k in range(len(NList)):
             var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
-        return list(zip(ave, var))
+        return list(ave)
     elif (f==rec_bs or f==itr_bs):
         for n in NList:
             partial=[]
@@ -158,17 +158,15 @@ def heap_extract(h):
 
 #II.A.3
 
-
-
-
-
+lista = list(range(10, 10001, 100))
+resultado=time_measure(two_sum,dataprep_ts,lista,1000,100)
+plt.plot(lista,resultado)
+plt.show()
 
 #Main
-lista = list(range(10, 10001, 100))
-print(lista)
 
 #Nlist= numValores de la lista, NRep=numero de veces que se repite LA MISMA LISTA, #NStat=num de veces con la lista del mismo tamaño (pero no la misma lista)
-print(time_measure(itr_bs,dataprep_bs,lista,1000,100))
+#print(time_measure(itr_bs,dataprep_bs,lista,1000,100))
 
 
 
