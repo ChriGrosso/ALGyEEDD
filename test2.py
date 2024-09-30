@@ -65,7 +65,7 @@ def time_measure(f, dataprep, NList, Nrep, Nstat):
             worst += [max(res[k])]
         for k in range(len(NList)):
             var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
-        return list(ave)
+        return list(zip(NList,ave))
     elif (f==rec_bs or f==itr_bs):
         for n in NList:
             partial=[]
@@ -85,7 +85,7 @@ def time_measure(f, dataprep, NList, Nrep, Nstat):
             worst += [max(res[k])]
         for k in range(len(NList)):
             var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
-        return list(zip(ave, var))
+        return list(zip(ave,var))
 
 
 #I.B.1
@@ -160,7 +160,8 @@ def heap_extract(h):
 
 lista = list(range(10, 10001, 100))
 resultado=time_measure(two_sum,dataprep_ts,lista,1000,100)
-plt.plot(lista,resultado)
+print(resultado)
+plt.plot(resultado)
 plt.show()
 
 #Main
