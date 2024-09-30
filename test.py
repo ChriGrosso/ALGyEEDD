@@ -11,6 +11,7 @@ def dataprep_ts(n):
     
     return data, v
 
+#1.A.2
 def two_sum(h,n):
     cont1=0
     cont2=1
@@ -29,9 +30,9 @@ def two_sum(h,n):
             cont2+=1
     return False
 
+#1.A.1
 def time_measure(f, dataprep_ts, NList, Nrep, Nstat):
     res=[]
-
     for n in NList:
         partial=[]
         for s in range(Nstat):
@@ -51,6 +52,33 @@ def time_measure(f, dataprep_ts, NList, Nrep, Nstat):
     for k in range(len(NList)):
         var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
     return list(zip(ave, var))
+
+#I.B.1
+def rec_bs(lst, lft, rgt, key):
+    if lft > rgt:
+        return None
+    mid = (lft + rgt) // 2
+    if lst[mid] == key:
+        return mid
+    elif key < lst[mid]:
+        return rec_bs(lst, lft, mid - 1, key)
+    else:
+        return rec_bs(lst, mid + 1, rgt, key)
+
+#I.B.2
+def itr_bs(lst, lft, rgt, key):
+    while lft <= rgt:
+        mid = (lft + rgt) // 2
+        
+        if lst[mid] == key:
+            return mid
+        elif key < lst[mid]:
+            rgt = mid - 1
+        else:
+            lft = mid + 1
+    return None
+
+
 
 ############
 # II. Heap # 
@@ -87,13 +115,15 @@ def heap_insert(h, key):
         k=p
 
 #II.A.3
-
 def heap_extract(h):
     u=h[0]
     h[0]=h[-1]
     h=h[:-1]
     h =heap_heapify(h, 0)
     return h,u #ritorno lista modificata e elemento estratto
+
+#II.A.3
+
 
 
 
