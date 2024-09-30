@@ -1,5 +1,6 @@
 import random
 import time
+#import matplotlib.pyplot as plt
 
 def dataprep_ts(n):
     data = []
@@ -10,6 +11,18 @@ def dataprep_ts(n):
     v = max(data) + 1 #¿pq en el anexo le suma +1? para que devuelva un elemento que no está dentro de la lista
     
     return data, v
+
+def dataprep_bs(n):
+    lst = []
+    for i in range(n):
+        data += [random.randint(0,n)]
+    idx = random.randint(0,n-1)
+    
+    v = max(data) + 1 #¿pq en el anexo le suma +1? para que devuelva un elemento que no está dentro de la lista
+    lft = lst[0]
+    rgt = lst[n-1]
+
+    return lst, lft, rgt, v
 
 #1.A.2
 def two_sum(h,n):
@@ -31,27 +44,49 @@ def two_sum(h,n):
     return False
 
 #1.A.1
-def time_measure(f, dataprep_ts, NList, Nrep, Nstat):
+def time_measure(f, dataprep, NList, Nrep, Nstat):
     res=[]
-    for n in NList:
-        partial=[]
-        for s in range(Nstat):
-            input1,input2  = dataprep_ts(n)
-            t1 = time.time()
-            for i in range(Nrep):
-                _ = f(input1,input2)
-            t2 = time.time()
-            partial += [ float(t2-t1)/float(Nrep) ]
-        res += [partial]
-        ave = []
-        var = []
-        worst = []
-    for k in range(len(NList)):
-        ave += [ sum(res[k])/float(Nstat) ]
-        worst += [max(res[k])]
-    for k in range(len(NList)):
-        var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
-    return list(zip(ave, var))
+    if (f == two_sum):
+        for n in NList:
+            partial=[]
+            for s in range(Nstat):
+                input1,input2  = dataprep(n)
+                t1 = time.time()
+                for i in range(Nrep):
+                    _ = f(input1,input2)
+                t2 = time.time()
+                partial += [ float(t2-t1)/float(Nrep) ]
+            res += [partial]
+            ave = []
+            var = []
+            worst = []
+        for k in range(len(NList)):
+            ave += [ sum(res[k])/float(Nstat) ]
+            worst += [max(res[k])]
+        for k in range(len(NList)):
+            var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
+        return list(zip(ave, var))
+    elif (f==rec_bs or f==itr_bs):
+        for n in NList:
+            partial=[]
+            for s in range(Nstat):
+                input1,input2,input3,input4  = dataprep_bs(n)
+                t1 = time.time()
+                for i in range(Nrep):
+                    _ = f(input1,input2,input3,input4)
+                t2 = time.time()
+                partial += [ float(t2-t1)/float(Nrep) ]
+            res += [partial]
+            ave = []
+            var = []
+            worst = []
+        for k in range(len(NList)):
+            ave += [ sum(res[k])/float(Nstat) ]
+            worst += [max(res[k])]
+        for k in range(len(NList)):
+            var += [ sum([(res[k][u]-ave[k])**2 for u in range(Nstat)])/float(Nstat) ]
+        return list(zip(ave, var))
+
 
 #I.B.1
 def rec_bs(lst, lft, rgt, key):
@@ -77,7 +112,6 @@ def itr_bs(lst, lft, rgt, key):
         else:
             lft = mid + 1
     return None
-
 
 
 ############
@@ -130,10 +164,10 @@ def heap_extract(h):
 
 
 #Main
-lista = list(range(10, 10001, 100))
+#lista = list(range(10, 10001, 100))
 #print(lista)
 
-print(time_measure(two_sum,dataprep_ts,lista,1000,100))
+#print(time_measure(two_sum,dataprep_ts,lista,1000,100))
 
 
 
