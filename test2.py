@@ -167,6 +167,7 @@ def heap_extract(h):
 lista = list(range(10, 10001, 100))
 print(lista)
 
+#Nlist= numValores de la lista, NRep=numero de veces que se repite LA MISMA LISTA, #NStat=num de veces con la lista del mismo tamaño (pero no la misma lista)
 print(time_measure(itr_bs,dataprep_bs,lista,1000,100))
 
 
