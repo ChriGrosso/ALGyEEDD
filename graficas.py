@@ -72,7 +72,7 @@ plt.fill_between(Nlst,
 
 plt.xlabel('Tamaño de la entrada (n)')
 plt.ylabel('Tiempo de ejecución (segundos)')
-plt.title('Tiempo de ejecución de la función itr_bs')
+plt.title('Tiempo de ejecución de la función rec_bs')
 plt.legend()
 plt.grid(True)
 
