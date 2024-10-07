@@ -31,8 +31,9 @@ def ds_find(p_ds, m):
 lst = [ (1, 4), (3, 4), (2, 5)]
 
 def connected(n,e):
-    i=0
-    while i<len(e):
-        if(e[i]<0 or e[i]>n):
+    for n1, n2 in e:
+        if n1 > n or n1 < 0:
             return None
-        i++
+        if n2 > n or n2 < 0:
+            return None
+    
