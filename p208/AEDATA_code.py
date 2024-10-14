@@ -28,7 +28,11 @@ def ds_find(p_ds, m):
         
         return z
     
-lst = [ (1, 4), (3, 4), (2, 5)]
+lst = [ -1, -1, 0, 0, 1, 4, 1, 4]
+
+print(ds_find(lst, 7))    
+
+
 
 def connected(n,e):
     for n1, n2 in e:
@@ -36,4 +40,3 @@ def connected(n,e):
             return None
         if n2 > n or n2 < 0:
             return None
-    
