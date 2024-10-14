@@ -1,7 +1,9 @@
+#I.A.1
 def ds_init(n):
     array = [-1] * n
     return array
 
+#I.A.2
 def ds_union(p_ds, rep_1, rep_2):
     u = ds_find(p_ds, rep_1)
     v = ds_find(p_ds, rep_2)
@@ -14,7 +16,7 @@ def ds_union(p_ds, rep_1, rep_2):
         p_ds[v] = u
         p_ds[u] -= 1
 
-
+#I.A.3
 def ds_find(p_ds, m):
     if (m<0 or m>len(p_ds)):
         return None
@@ -28,6 +30,7 @@ def ds_find(p_ds, m):
         
         return z
     
+#Test
 lst = [ -1, -1, 0, 0, 1, 4, 1, 4]
 
 print(ds_find(lst, 7))    
