@@ -78,18 +78,30 @@ print(ccp)
 
 #II.A.1
 def kruskal(n, E):
-    mst = []
-    ds = ds_init(n)
-    q = PriorityQueue()
-    # Insert all edges into the priority queue
-    for u, v, weight in E:
-        q.put((weight, (u, v)))
-    # Process edges
-    while not q.empty():
-        weight, (u, v) = q.get()
-        x = ds_find(u, ds)
-        y = ds_find(v, ds)
-        if x != y:
-            mst.append((u, v, weight))
-            ds_union(x, y, ds)
-    return mst
+    E.sort(key=lambda x: x[0])
+    p_ds = ds_init(n)
+    mst_edges = []
+    for  u, v, w in E:
+        if ds_find(p_ds, u) != ds_find(p_ds, v):
+            ds_union(p_ds, u, v)
+            mst_edges.append((u, v, w))
+        if len(mst_edges) == n - 1:
+            break
+    if len(mst_edges) != n - 1:
+        return None
+    return (n, mst_edges)
+
+#II.A.2
+def k_weight(n, E):
+    sum=0
+    for (u,v,w) in E:
+        sum=sum+w
+    return sum
+
+#Test
+n = 4
+E = [(0, 1, 1),(0, 2, 4),(1, 2, 3),(1, 3, 2),(2, 3, 5)]
+n,mst = kruskal(n, E)
+print(n, mst)
+z=k_weight(n,mst)
+print(z)
