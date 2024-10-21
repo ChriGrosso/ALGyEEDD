@@ -1,4 +1,6 @@
 #I.A.1
+from queue import PriorityQueue
+
 def ds_init(n):
     array = [-1] * n
     return array
@@ -32,11 +34,10 @@ def ds_find(p_ds, m):
     
 #Test
 lst = [ -1, -1, 0, 0, 1, 4, 1, 4]
-
 print(ds_find(lst, 7))    
 
 
-    
+#I.B.1  
 def connected(n,e):
     for n1, n2 in e:
         if n1 > n or n1 <= 0:
@@ -50,6 +51,7 @@ def connected(n,e):
 
     return p_ds
 
+#I.B.2
 def connected_count(p):
     count=0
     for x in p:
@@ -58,17 +60,14 @@ def connected_count(p):
     
     return count
 
+#I.B.3
 def connected_sets(p_ds):
     sets = {}
-    
-    # Para cada nodo, encontramos su raíz y lo añadimos al conjunto correspondiente
     for i in range(len(p_ds)):
         root = ds_find(p_ds, i)
         if root not in sets:
             sets[root] = []
         sets[root].append(i)
-    
-    # Convertimos el diccionario en una lista de listas
     return list(sets.values())
 
 lst = [ (1, 4), (3, 4), (2, 5)]
@@ -76,3 +75,21 @@ s = connected(6, lst)
 n = connected_count(s)
 ccp = connected_sets(s)
 print(ccp)
+
+#II.A.1
+def kruskal(n, E):
+    mst = []
+    ds = ds_init(n)
+    q = PriorityQueue()
+    # Insert all edges into the priority queue
+    for u, v, weight in E:
+        q.put((weight, (u, v)))
+    # Process edges
+    while not q.empty():
+        weight, (u, v) = q.get()
+        x = ds_find(u, ds)
+        y = ds_find(v, ds)
+        if x != y:
+            mst.append((u, v, weight))
+            ds_union(x, y, ds)
+    return mst
