@@ -1,5 +1,5 @@
 #I.A.1
-from queue import PriorityQueue
+import random
 
 def ds_init(n):
     array = [-1] * n
@@ -105,3 +105,18 @@ n,mst = kruskal(n, E)
 print(n, mst)
 z=k_weight(n,mst)
 print(z)
+
+#II.B.1
+def erdos_conn(n,m):
+    E=[]
+    for i in range(i,n):
+        k= random.randint(0,i-1)#Nodo m random entre
+        w= random.random()#Peso w random entre 0 y 1
+        E+=[(i,k,w)]
+    for i in range(0,n*(m-1)-1):
+        u=random.randint(0,i-1)
+        v=random.randint(0,i-1)
+        for a,b,c in E:
+            if()
+        
+    return E
