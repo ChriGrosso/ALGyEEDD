@@ -109,14 +109,15 @@ print(z)
 #II.B.1
 def erdos_conn(n,m):
     E=[]
-    for i in range(i,n):
+    for i in range(1,n):        #Usamos range(1,n) porque python le resta 1 al stop (segundo parametro)
         k= random.randint(0,i-1)#Nodo m random entre
-        w= random.random()#Peso w random entre 0 y 1
+        w= round(random.random(),2)#Peso w random entre 0 y 1
         E+=[(i,k,w)]
-    for i in range(0,n*(m-1)-1):
-        u=random.randint(0,i-1)
-        v=random.randint(0,i-1)
-        for a,b,c in E:
-            if()
-        
+    for i in range(0,n*(m-1)):
+        for j in range (0, n-1):
+            w= round(random.random(),2)#Peso w random entre 0 y 1
+            if((w!=0) and (j!=i)):
+                E+=[(i,j,w)]        
     return E
+
+print(erdos_conn(10,1))
