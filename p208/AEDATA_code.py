@@ -1,5 +1,7 @@
 #I.A.1
 import random
+import time
+import statistics
 
 def ds_init(n):
     array = [-1] * n
@@ -37,7 +39,11 @@ lst = [ -1, -1, 0, 0, 1, 4, 1, 4]
 print(ds_find(lst, 7))    
 
 
-#I.B.1  
+#I.B.1
+# La funciónn recibe un entero n (el número de nodos del grafo) y una lista de pares de enteros E =[(u1,v1),...,(um,vm)]
+# con ui,vi ∈ [0,n). Cada elemento de la lista indica que hay un arco (no dirigido) entre los nodos ui and vi.
+# La funcionn ejecutará el algoritmo de componentes conexas y devolverá la estructura de conjuntos disjuntos que
+# resulta de la ejecución.
 def connected(n,e):
     for n1, n2 in e:
         if n1 > n or n1 <= 0:
@@ -52,6 +58,8 @@ def connected(n,e):
     return p_ds
 
 #I.B.2
+# La función recibe en entrada la estructura de conjuntos disjuntos resultante de la llamada a connected y
+# devuelve el número de componentes conexas del grafo.
 def connected_count(p):
     count=0
     for x in p:
@@ -61,6 +69,9 @@ def connected_count(p):
     return count
 
 #I.B.3
+# La función recibe en entrada la estructura de conjuntos disjuntos resultante de la llamada a connected y
+# devuelve una lista de listas de enteros: cada una de las listas representa una componente conexa del grafo y
+# contiene los nodos que forman parte de esa componente conexa.
 def connected_sets(p_ds):
     sets = {}
     for i in range(len(p_ds)):
@@ -77,6 +88,10 @@ ccp = connected_sets(s)
 print(ccp)
 
 #II.A.1
+# Ejecuta el algoritmo de Kruskal en el grafo. El algoritmo debe devolver un grafo (un árbol, lo recordamos,
+# también es un grafo) (n,E′) donde n es el número de nodos (el mismo que en grafo inicial) y E′ es el conjunto de
+# arcos que forman el árbol. Si el árbol no existe (es fácil ver que un grafo no conexto no tiene árbol abarcador),
+# la función debe devolver None.
 def kruskal(n, E):
     E.sort(key=lambda x: x[0])
     p_ds = ds_init(n)
@@ -92,6 +107,7 @@ def kruskal(n, E):
     return (n, mst_edges)
 
 #II.A.2
+# Dada la lista de arcos producidos por la función kruskal, devuelve el peso del árbol
 def k_weight(n, E):
     sum=0
     for (u,v,w) in E:
@@ -107,17 +123,55 @@ z=k_weight(n,mst)
 print(z)
 
 #II.B.1
-def erdos_conn(n,m):
-    E=[]
-    for i in range(1,n):        #Usamos range(1,n) porque python le resta 1 al stop (segundo parametro)
-        k= random.randint(0,i-1)#Nodo m random entre
-        w= round(random.random(),2)#Peso w random entre 0 y 1
-        E+=[(i,k,w)]
-    for i in range(0,n*(m-1)):
-        for j in range (0, n-1):
-            w= round(random.random(),2)#Peso w random entre 0 y 1
-            if((w!=0) and (j!=i)):
-                E+=[(i,j,w)]        
-    return E
 
-print(erdos_conn(10,1))
+def erdos_conn(n, m):
+    # Inicializamos la estructura DSU y la lista de arcos
+    p_ds = ds_init(n)
+    arcos = []
+    
+    # Paso 1: Conectamos nodos para asegurar la conectividad
+    for i in range(1, n):
+        nodo_conectado = random.randint(0, i - 1)
+        peso = round(random.uniform(0, 1),2)
+        arcos.append((i, nodo_conectado, peso))
+        ds_union(p_ds, i, nodo_conectado)
+    
+    # Paso 2: Añadimos arcos adicionales secuencialmente
+    arcos_existentes = {(min(u, v), max(u, v)) for u, v, _ in arcos}
+    arcos_adicionales = n * (m - 1) - 1
+    
+    while arcos_adicionales>=0:
+        # Verificamos que el arco no exista y los nodos no estén conectados
+        u=random.randint(0,n-1)
+        v=random.randint(0,n-1)
+        (u, v)=(min(u, v), max(u, v))
+        if (u, v) not in arcos_existentes and u!=v:
+            peso = round(random.uniform(0, 1),2)
+            arcos.append((u, v, peso))
+            arcos_existentes.add((u, v))
+            arcos_adicionales -= 1
+
+    return arcos
+
+# Ejemplo de uso
+E=erdos_conn(10,2)
+#print(E)
+#print(kruskal(10,E))
+
+def time_kruskal(n, m, n_graphs):
+    tiempos = []
+    
+    for _ in range(n_graphs):
+        grafo=erdos_conn(n,m)
+        t_start = time.time()
+        kruskal(n,grafo)
+        t_end = time.time()
+        elapsed_time = (t_end - t_start) * 1000 #Multiplicamos por mil para tenerlo en milisegundos
+        tiempos.append(elapsed_time)
+
+    mean_time = round(statistics.mean(tiempos),4)
+    var_time = round(statistics.variance(tiempos),4)
+    
+    return mean_time, var_time, tiempos
+
+print(time_kruskal(1000,50,100))
