@@ -15,10 +15,10 @@ def plot_kruskal_times(n_values, m_values, n_graphs=10):
         plt.plot(n_values, mean_times, marker='o', label=f'm = {m}')
     
     # Configuración de la gráfica
-    plt.xlabel("Número de Nodos (n)")
-    plt.ylabel("Tiempo de Ejecución Promedio (ms)")
-    plt.title("Tiempo de Ejecución de Kruskal en Función del Tamaño del Grafo")
-    plt.legend(title="Número de Arcos/Nodo (m)")
+    plt.xlabel("Número de nodos (n)")
+    plt.ylabel("Tiempo de ejecución promedio (ms)")
+    plt.title("Tiempo de ejecución de Kruskal en función del tamaño del grafo")
+    plt.legend(title="Número de arcos/nodo (m)")
     plt.grid()
     
     # Guardamos la gráfica en un archivo PDF
