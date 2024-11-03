@@ -5,24 +5,20 @@ import itertools
 
 # I.A.1 Inicializa una estructura con n elementos, cada uno siendo un conjunto separado
 def ds_init(n):
-    # Creamos un array con n elementos, inicializado en -1 para indicar que cada elemento es su propio conjunto
     array = [-1] * n
     return array
 
 # I.A.2 La función hace la unión por rango de los dos conjuntos representados por rep_1 y rep_2 y devuelve el representante del
 # conjunto unión.
 def ds_union(p_ds, rep_1, rep_2):
-    # Encontramos el representante de cada conjunto
     u = ds_find(p_ds, rep_1)
     v = ds_find(p_ds, rep_2)
 
-    # Unión por rango: conectamos el conjunto con menor rango al de mayor rango
     if (p_ds[u]<p_ds[v]):
         p_ds[v] = u
     elif (p_ds[v]<p_ds[u]):
         p_ds[u] = v
     else:
-        # Si ambos tienen el mismo rango, eligimos uno ('u') como representante y aumenta su rango
         p_ds[v] = u
         p_ds[u] -= 1
 
@@ -31,14 +27,19 @@ def ds_find(p_ds, m):
     if (m<0 or m>len(p_ds)):    # Verificar que m esté en el rango 0, ..., n − 1 y devolver None en caso contrario.
         return None
     else:
-        # Encontramos el representante del conjunto, aplicando compresión de caminos
         z=m
+
         while (p_ds[z]>=0):
             z=p_ds[z]
         while (p_ds[m]>=0):
             p_ds[m], m = z, p_ds[m]
-
+        
         return z
+    
+#Test
+#lst = [ -1, -1, 0, 0, 1, 4, 1, 4]
+#print(ds_find(lst, 7))    
+
 
 #I.B.1
 # La funciónn recibe un entero n (el número de nodos del grafo) y una lista de pares de enteros E =[(u1,v1),...,(um,vm)]
@@ -46,16 +47,13 @@ def ds_find(p_ds, m):
 # La funcionn ejecutará el algoritmo de componentes conexas y devolverá la estructura de conjuntos disjuntos que
 # resulta de la ejecución.
 def connected(n,e):
-    # Verificamos que los nodos estén dentro del rango permitido
     for n1, n2 in e:
         if n1 > n or n1 <= 0:
             return None
         if n2 > n or n2 <= 0:
             return None
-    
-    # Inicializamos la estructura de conjuntos disjuntos
+        
     p_ds=ds_init(n)
-    # Unimos los nodos que están conectados por un arco
     for n1, n2 in e: 
         ds_union(p_ds,n1,n2)
 
@@ -66,7 +64,6 @@ def connected(n,e):
 # devuelve el número de componentes conexas del grafo.
 def connected_count(p):
     count=0
-    # Contamos el número de raíces (elementos con valor negativo) que representan componentes conexas
     for x in p:
         if x<0:
             count=count+1
@@ -77,16 +74,20 @@ def connected_count(p):
 # La función recibe en entrada la estructura de conjuntos disjuntos resultante de la llamada a connected y
 # devuelve una lista de listas de enteros: cada una de las listas representa una componente conexa del grafo y
 # contiene los nodos que forman parte de esa componente conexa.
-def connected_sets(p):
+def connected_sets(p_ds):
     sets = {}
-    # Agrupamos nodos bajo su representante raíz
-    for i in range(len(p)):
-        root = ds_find(p, i)
+    for i in range(len(p_ds)):
+        root = ds_find(p_ds, i)
         if root not in sets:
             sets[root] = []
         sets[root].append(i)
-    # Convertimos el diccionario de componentes en una lista de listas
     return list(sets.values())
+
+#lst = [ (1, 4), (3, 4), (2, 5)]
+#s = connected(6, lst)
+#n = connected_count(s)
+#ccp = connected_sets(s)
+#print(ccp)
 
 #II.A.1
 # Ejecuta el algoritmo de Kruskal en el grafo. El algoritmo debe devolver un grafo (un árbol, lo recordamos,
@@ -94,20 +95,15 @@ def connected_sets(p):
 # arcos que forman el árbol. Si el árbol no existe (es fácil ver que un grafo no conexto no tiene árbol abarcador),
 # la función debe devolver None.
 def kruskal(n, E):
-    # Ordenamos los arcos por peso ascendente
     E.sort(key=lambda x: x[0])
-    # Inicializamos la estructura de conjuntos disjuntos y la lista de arcos del árbol de expansión mínima
     p_ds = ds_init(n)
     mst_edges = []
     for  u, v, w in E:
-        # Solo agregamos el arco si no conecta dos nodos ya conectados
         if ds_find(p_ds, u) != ds_find(p_ds, v):
             ds_union(p_ds, u, v)
             mst_edges.append((u, v, w))
-        # Si ya hemos encontrado n-1 arcos, terminamos
         if len(mst_edges) == n - 1:
             break
-    # Verificamos si el árbol de expansión mínima cubre todos los nodos
     if len(mst_edges) != n - 1:
         return None
     return (n, mst_edges)
@@ -116,12 +112,20 @@ def kruskal(n, E):
 # Dada la lista de arcos producidos por la función kruskal, devuelve el peso del árbol
 def k_weight(n, E):
     sum=0
-    # Sumamos los pesos de los arcos en el árbol de expansión mínima
     for (u,v,w) in E:
         sum=sum+w
     return sum
 
+#Test
+#n = 4
+#E = [(0, 1, 1),(0, 2, 4),(1, 2, 3),(1, 3, 2),(2, 3, 5)]
+#n,mst = kruskal(n, E)
+#print(n, mst)
+#z=k_weight(n,mst)
+#print(z)
+
 #II.B.1
+
 def erdos_conn(n, m):
     # Inicializamos la estructura DSU y la lista de arcos
     p_ds = ds_init(n)
@@ -151,10 +155,14 @@ def erdos_conn(n, m):
 
     return arcos
 
+# Ejemplo de uso
+#E=erdos_conn(10,2)
+#print(E)
+#print(kruskal(10,E))
+
 def time_kruskal(n, m, n_graphs):
     tiempos = []
     
-    # Ejecutamos múltiples veces el algoritmo de Kruskal y medimos el tiempo de cada ejecución
     for _ in range(n_graphs):
         grafo=erdos_conn(n,m)
         t_start = time.time()
@@ -163,20 +171,19 @@ def time_kruskal(n, m, n_graphs):
         elapsed_time = (t_end - t_start) * 1000 #Multiplicamos por mil para tenerlo en milisegundos
         tiempos.append(elapsed_time)
 
-    # Calcula el tiempo promedio y la varianza
-    mean_time = round(abs(statistics.mean(tiempos)),4)
-    var_time = round(abs(statistics.variance(tiempos)),4)
+    mean_time = round(statistics.mean(tiempos),4)
+    var_time = round(statistics.variance(tiempos),4)
     
     return mean_time, var_time, tiempos
+
+#print(time_kruskal(1000,50,100))
 
 # Genera una matriz simétrica de distancias aleatorias entre ciudades. La diagonal se establece en cero (distancia a sí misma), 
 # y se asegura que mij = mji para mantener la simetría.
 def dist_matrix(n_cities, w_max=10):
-    # Creamos una matriz de distancias aleatorias
     M = [[random.uniform(0, w_max) for _ in range(n_cities)] for _ in range(n_cities)]
     for k in range(n_cities):
         M[k][k] = 0
-        # Aseguramos la simetría de la matriz
         for h in range(k):
             u = (M[k][h] + M[h][k]) / 2.0
             M[h][k] = M[k][h] = u
@@ -214,6 +221,13 @@ def greedy_tsp(dist_m, node_ini):
     
     return circuit
 
+# Crear una matriz de distancias para 5 ciudades
+dist_m = dist_matrix(5)
+# Ejecutar el algoritmo greedy TSP desde la ciudad inicial 0
+circuito = greedy_tsp(dist_m, 0)
+print("Circuito encontrado:", circuito)
+
+
 def len_circuit(circuit, dist_m):
     total_length = 0
     n = len(circuit)
@@ -231,14 +245,29 @@ def len_circuit(circuit, dist_m):
     
     return total_length
 
+# Ejemplo de matriz de distancias
+dist_m = [
+    [0, 2, 9, 5],
+    [1, 0, 6, 4],
+    [14, 2, 0, 8],
+    [6, 3, 1, 0]
+]
+
+# Circuito generado por greedy_tsp, por ejemplo
+circuit = greedy_tsp(dist_m, 0)
+
+# Calcular la longitud del circuito
+circuit_length = len_circuit(circuit, dist_m)
+print("Longitud del circuito cerrado:", circuit_length)
+
 def repeated_greedy_tsp(dist_m):
     n_cities = len(dist_m)
     best_circuit = None
     min_length = float('inf')
     
-    # Probar greedy_tsp comenzando desde cada ciudad
+    # Probar `greedy_tsp` comenzando desde cada ciudad
     for start_node in range(n_cities):
-        # Generar un circuito comenzando desde start_node
+        # Generar un circuito comenzando desde `start_node`
         circuit = greedy_tsp(dist_m, start_node)
         
         # Calcular la longitud del circuito
@@ -250,6 +279,19 @@ def repeated_greedy_tsp(dist_m):
             best_circuit = circuit
     
     return best_circuit, min_length
+
+# Ejemplo de matriz de distancias
+dist_m = [
+    [0, 2, 9, 10],
+    [1, 0, 6, 4],
+    [15, 7, 0, 8],
+    [6, 3, 12, 0]
+]
+
+# Ejecutar el TSP repetitivo
+best_circuit, best_length = repeated_greedy_tsp(dist_m)
+print("Mejor circuito:", best_circuit)
+print("Longitud del mejor circuito:", best_length)
 
 
 def exhaustive_tsp(dist_m):
@@ -269,3 +311,16 @@ def exhaustive_tsp(dist_m):
             best_circuit = circuit      # Guarda el circuito más corto encontrado
             
     return best_circuit, min_length
+
+# Ejemplo de matriz de distancias
+dist_m = [
+    [0, 2, 9, 10],
+    [1, 0, 6, 4],
+    [15, 7, 0, 8],
+    [6, 3, 12, 0]
+]
+
+# Ejecutar TSP exhaustivo
+best_circuit, best_length = exhaustive_tsp(dist_m)
+print("Circuito óptimo:", best_circuit)
+print("Longitud del circuito óptimo:", best_length)
