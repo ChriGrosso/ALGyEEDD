@@ -3,13 +3,15 @@ import time
 import statistics
 import itertools
 
-# I.A.1 Inicializa una estructura con n elementos, cada uno siendo un conjunto separado
+# I.A.1 
+# Inicializa una estructura con n elementos, cada uno siendo un conjunto separado
 def ds_init(n):
     # Creamos un array con n elementos, inicializado en -1 para indicar que cada elemento es su propio conjunto
     array = [-1] * n
     return array
 
-# I.A.2 La función hace la unión por rango de los dos conjuntos representados por rep_1 y rep_2 y devuelve el representante del
+# I.A.2 
+# La función hace la unión por rango de los dos conjuntos representados por rep_1 y rep_2 y devuelve el representante del
 # conjunto unión.
 def ds_union(p_ds, rep_1, rep_2):
     # Encontramos el representante de cada conjunto
@@ -26,7 +28,8 @@ def ds_union(p_ds, rep_1, rep_2):
         p_ds[v] = u
         p_ds[u] -= 1
 
-#I.A.3 Devuelve el representante del elemento m usando compresión de camino
+# I.A.3 
+# Devuelve el representante del elemento m usando compresión de camino
 def ds_find(p_ds, m):
     if (m<0 or m>len(p_ds)):    # Verificar que m esté en el rango 0, ..., n − 1 y devolver None en caso contrario.
         return None
@@ -40,7 +43,7 @@ def ds_find(p_ds, m):
 
         return z
 
-#I.B.1
+# I.B.1
 # La funciónn recibe un entero n (el número de nodos del grafo) y una lista de pares de enteros E =[(u1,v1),...,(um,vm)]
 # con ui,vi ∈ [0,n). Cada elemento de la lista indica que hay un arco (no dirigido) entre los nodos ui and vi.
 # La funcionn ejecutará el algoritmo de componentes conexas y devolverá la estructura de conjuntos disjuntos que
@@ -61,7 +64,7 @@ def connected(n,e):
 
     return p_ds
 
-#I.B.2
+# I.B.2
 # La función recibe en entrada la estructura de conjuntos disjuntos resultante de la llamada a connected y
 # devuelve el número de componentes conexas del grafo.
 def connected_count(p):
@@ -73,7 +76,7 @@ def connected_count(p):
     
     return count
 
-#I.B.3
+# I.B.3
 # La función recibe en entrada la estructura de conjuntos disjuntos resultante de la llamada a connected y
 # devuelve una lista de listas de enteros: cada una de las listas representa una componente conexa del grafo y
 # contiene los nodos que forman parte de esa componente conexa.
@@ -88,7 +91,7 @@ def connected_sets(p):
     # Convertimos el diccionario de componentes en una lista de listas
     return list(sets.values())
 
-#II.A.1
+# II.A.1
 # Ejecuta el algoritmo de Kruskal en el grafo. El algoritmo debe devolver un grafo (un árbol, lo recordamos,
 # también es un grafo) (n,E′) donde n es el número de nodos (el mismo que en grafo inicial) y E′ es el conjunto de
 # arcos que forman el árbol. Si el árbol no existe (es fácil ver que un grafo no conexto no tiene árbol abarcador),
@@ -112,7 +115,7 @@ def kruskal(n, E):
         return None
     return (n, mst_edges)
 
-#II.A.2
+# II.A.2
 # Dada la lista de arcos producidos por la función kruskal, devuelve el peso del árbol
 def k_weight(n, E):
     sum=0
@@ -121,7 +124,7 @@ def k_weight(n, E):
         sum=sum+w
     return sum
 
-#II.B.1
+# II.B.1 Dado los parámetros n y m construye el grafo aleatorio y devuelva la lista de arcos
 def erdos_conn(n, m):
     # Inicializamos la estructura DSU y la lista de arcos
     p_ds = ds_init(n)
@@ -151,6 +154,9 @@ def erdos_conn(n, m):
 
     return arcos
 
+# II.B.2
+# Dados los parametros n y m, construye n_graphs grafos aleatorios de Erdös-Renyi modificados, calcula el tiempo de ejecución
+# del algoritmo de Kruskal en cada uno de ellos, y devuelve media y varianza de tal tiempo
 def time_kruskal(n, m, n_graphs):
     tiempos = []
     
@@ -182,6 +188,9 @@ def dist_matrix(n_cities, w_max=10):
             M[h][k] = M[k][h] = u
     return M
 
+# II.A.1
+# Recibe una matriz de distancias y un nodo inicial y devuelva un circuito codiciosos como una lista con valores entre 0 y n_cities-1
+# y que representa la secuencias de ciudades a recorrer
 def greedy_tsp(dist_m, node_ini):
     n_cities = len(dist_m)
     visited = [False] * n_cities    # Se inicializa una lista visited para marcar las ciudades ya visitadas.
@@ -198,33 +207,35 @@ def greedy_tsp(dist_m, node_ini):
                                     # Es útil para garantizar que cualquier distancia que encontremos en la matriz será menor 
                                     # que el valor inicial, lo que nos ayuda a identificar la ciudad más cercana correctamente
 
-        # Encontrar la ciudad no visitada más cercana
+        # Encontramos la ciudad no visitada más cercana
         for next_city in range(n_cities):
             if not visited[next_city] and dist_m[current_node][next_city] < min_distance:
                 nearest_city = next_city
                 min_distance = dist_m[current_node][next_city]
 
-        # Moverse a la ciudad más cercana encontrada
+        # Nos movemos a la ciudad más cercana encontrada
         circuit.append(nearest_city)
         visited[nearest_city] = True
         current_node = nearest_city
 
-    # Cerrar el circuito volviendo al nodo inicial
+    # Cerramos el circuito volviendo al nodo inicial
     circuit.append(node_ini)
     
     return circuit
 
+# II.A.2
+# Recibe un circuito tal como lo ha generado greedy_tsp, una matriz de distancias, y devuelve su longitud.
 def len_circuit(circuit, dist_m):
     total_length = 0
     n = len(circuit)
     
-    # Sumar las distancias entre ciudades consecutivas en el circuito
+    # Sumamos las distancias entre ciudades consecutivas en el circuito
     # Se itera a través del circuito para sumar las distancias entre cada ciudad y la siguiente, usando la matriz dist_m. 
     # Por ejemplo, si el circuito es [0, 2, 1, 3], se suman las distancias de 0 -> 2, 2 -> 1 y 1 -> 3.
     for i in range(n - 1):
         total_length += dist_m[circuit[i]][circuit[i + 1]]
     
-    # Añadir la distancia de regreso desde la última ciudad a la primera
+    # Añadimos la distancia de regreso desde la última ciudad a la primera
     # Después del bucle, sumamos la distancia entre la última ciudad y la primera ciudad (circuit[-1] -> circuit[0]).
     # Esto cierra el circuito.
     total_length += dist_m[circuit[-1]][circuit[0]]
@@ -236,12 +247,12 @@ def repeated_greedy_tsp(dist_m):
     best_circuit = None
     min_length = float('inf')
     
-    # Probar greedy_tsp comenzando desde cada ciudad
+    # Probamos greedy_tsp comenzando desde cada ciudad
     for start_node in range(n_cities):
-        # Generar un circuito comenzando desde start_node
+        # Generamos un circuito comenzando desde start_node
         circuit = greedy_tsp(dist_m, start_node)
         
-        # Calcular la longitud del circuito
+        # Calculamos la longitud del circuito
         circuit_length = len_circuit(circuit, dist_m)
         
         # Si encontramos un circuito más corto, actualizamos
@@ -257,15 +268,15 @@ def exhaustive_tsp(dist_m):
     best_circuit = None
     min_length = float('inf')
     
-    # Generar todas las permutaciones de las ciudades (0, ..., n_cities - 1)
+    # Generamos todas las permutaciones de las ciudades (0, ..., n_cities - 1)
     for circuit in itertools.permutations(range(n_cities)):
-        # Convertir la permutación a lista y calcular la longitud del circuito cerrado
+        # Convertimos la permutación a lista y calculamos la longitud del circuito cerrado
         circuit = list(circuit)
         circuit_length = len_circuit(circuit, dist_m)
         
         # Si la longitud del circuito actual es la mínima, actualizamos
         if circuit_length < min_length:
-            min_length = circuit_length # Almacena la longitud mínima del circuito más corto, inicializada en float('inf')
-            best_circuit = circuit      # Guarda el circuito más corto encontrado
+            min_length = circuit_length # Almacenamos la longitud mínima del circuito más corto, inicializada en float('inf')
+            best_circuit = circuit      # Guardamos el circuito más corto encontrado
             
     return best_circuit, min_length
