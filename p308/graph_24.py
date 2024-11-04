@@ -1,6 +1,7 @@
 from typing import Set, List, Generator, Tuple, KeysView, Iterable
 import os
 
+
 class Graph:
     
     def __init__(self):
@@ -11,7 +12,13 @@ class Graph:
     def add_node(self, vertex) -> None:
         ''' Add a single node if it is not in the graph
         '''
+        for clave in self._V.keys():
+            if(clave==vertex):
+                return None
+            else:
+                self._V[clave] = dict()
         pass
+
     
     def add_edge(self, vertex_from, vertex_to) -> None:
         ''' Add an edge from vertex_from to vertex_to. The nodes will be 
@@ -75,6 +82,6 @@ def write_adjlist(G: Graph, file: str) -> None:
     
 ### Driver code
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     #G = read_adjlist('./graph.txt')
     #print(G)
