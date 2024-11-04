@@ -15,7 +15,8 @@ class Graph:
         for clave in self._V.keys():
             if(clave==vertex):
                 return None
-        self._V[vertex] = dict()
+        self._init_node(vertex)
+        self._E[vertex]=set()
         pass
 
     
@@ -23,6 +24,9 @@ class Graph:
         ''' Add an edge from vertex_from to vertex_to. The nodes will be 
             added if they are not already in the graph.
         '''
+        self.add_node(vertex_from)
+        self.add_node(vertex_to)
+        self._E[vertex_from].add(vertex_to)
         pass
    
     def nodes(self) -> KeysView[str]:
@@ -31,13 +35,18 @@ class Graph:
         pass
                       
     def adj(self, vertex) -> Set[str]:
-        '''Devuelve los nodos adjacentes a vertex '''
+        '''Devuelve los nodos adyacentes a vertex '''
+        return self._E.get(vertex, set())
         pass
 
     def exists_edge(self, vertex_from, vertex_to)-> bool:
         ''' Devuelve True/False si vertex_to se encuentra en la
             lista de adyacencia de vertex_from
         '''
+        if(self._E[vertex_from] in self.adj(self,vertex_to)):
+            return True
+        else:
+            return False
         pass
         
     def _init_node(self, vertex) -> None:
@@ -82,14 +91,27 @@ def write_adjlist(G: Graph, file: str) -> None:
     
 ### Driver code
 
-#if __name__ == '__main__':
-    #G = read_adjlist('./graph.txt')
-    #print(G)
+# if __name__ == '__main__':
+#     G = read_adjlist('./graph.txt')
+#     print(G)
 
-G=Graph()
-G.add_node(1)
-G.add_node(2)
-claves=G.nodes()
-print(claves)
+# G=Graph()
+# G.add_node(1)
+# G.add_node(2)
+# G.add_node(2)
+# claves=G.nodes()
+# print(claves)
+# print(G._V[1]["color"])
 # for clave in G._V.keys():
 #     print(clave)
+
+G = Graph ()
+G.add_edge (0, 1)
+G.add_edge (2, 1)
+G.add_edge (1, 4)
+G.add_edge (4, 3)
+G.add_edge (5, 4)
+G.add_edge (3, 0)
+G.add_edge (5, 2)
+
+print(G)
