@@ -56,7 +56,14 @@ class Graph:
                            'd_time': None, 'f_time': None}
         
     def __str__(self) -> str:
-        pass
+        result = ["Vertices:"]
+        for v, attrs in self._V.items():
+            result.append(f"{v}: {attrs}")
+        result.append("\nAristas:")
+        for v, edges in self._E.items():
+            if edges:  # Only show nodes with edges
+                result.append(f"{v}: {sorted(edges)}")
+        return "\n".join(result)
 
             
 ### Auxiliary functions to manage graphs ########
