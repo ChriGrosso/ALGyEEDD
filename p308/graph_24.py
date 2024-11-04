@@ -15,8 +15,7 @@ class Graph:
         for clave in self._V.keys():
             if(clave==vertex):
                 return None
-            else:
-                self._V[clave] = dict()
+        self._V[vertex] = dict()
         pass
 
     
@@ -28,6 +27,7 @@ class Graph:
    
     def nodes(self) -> KeysView[str]:
         '''Devuelve las keys de los nodos del grafo'''
+        return self._V.keys()
         pass
                       
     def adj(self, vertex) -> Set[str]:
@@ -85,3 +85,11 @@ def write_adjlist(G: Graph, file: str) -> None:
 #if __name__ == '__main__':
     #G = read_adjlist('./graph.txt')
     #print(G)
+
+G=Graph()
+G.add_node(1)
+G.add_node(2)
+claves=G.nodes()
+print(claves)
+# for clave in G._V.keys():
+#     print(clave)
