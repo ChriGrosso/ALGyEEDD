@@ -33,7 +33,7 @@ class Graph:
         ''' Inicializa los atributos básicos de un nodo (color, padre, tiempo de descubrimiento y finalización). '''
         self._V[vertex] = {'color': 'WHITE', 'parent': None, 'd_time': None, 'f_time': None}
     
-    def dfs(self, nodes_sorted: Iterable[str] = None) -> List[List[Tuple[str, str]]]:
+    def dfs(self, nodes_sorted: Iterable[str] = None) -> List[List[Tuple]]:
         ''' Implementación de búsqueda en profundidad (DFS) en el grafo, devolviendo un bosque DFS. '''
         
         # Si no se especifica un orden, usa los nodos en el orden natural
@@ -66,6 +66,7 @@ class Graph:
                 dfs_forest.append(tree)  # Agrega el árbol DFS al bosque
 
         return dfs_forest
+    
 
     def tarjan(self) -> List[List[str]]:
         ''' Implementación del algoritmo de Tarjan para hallar componentes fuertemente conexas (SCC) '''
@@ -124,6 +125,21 @@ class Graph:
             if edges:  # Solo muestra nodos con aristas
                 result.append(f"{v}: {{{', '.join(edges)}}}")
         return "\n".join(result)
+    
+def graph_conjugate(G: Graph) -> Graph:
+    """
+    Crea el grafo traspuesto del grafo G
+    """
+    # Crea nuevo grafo
+    transposed_graph = Graph()
+    # Anade todo los nodos
+    for node in G.nodes():
+        transposed_graph.add_node(node)
+    # Inverte todas las aristas
+    for node in G.nodes():
+        for adj_node in G.adj(node):
+            transposed_graph.add_edge(adj_node, node)
+    return transposed_graph
 
 # Ejemplo de uso
 G = Graph()

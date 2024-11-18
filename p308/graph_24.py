@@ -1,5 +1,6 @@
 from typing import Set, List, Generator, Tuple, KeysView, Iterable
 import os
+from collections import deque
 
 
 class Graph:
@@ -65,13 +66,21 @@ class Graph:
                 result.append(f"{v}: {sorted(edges)}")
         return "\n".join(result)
 
+    def dfs(self, nodes_sorted: Iterable[str] = None) -> List[List[Tuple]]:
+        ''' Depth find search driver
+        nodes_sorted: Si se le pasa un iterable el bucle principal de DFS
+        se iteraria segun el orden del iterable (eg en Tarjan)
+        Devuelve un bosque dfs en la que cada una de las sublistas es un
+        arbol dfs. Cada elemnto del arbol es una tupla (vertex, parent)
+        '''
+    pass
+
             
 ### Auxiliary functions to manage graphs ########
                 
 def read_adjlist(file: str) -> Graph:
     ''' Read graph in adjacency list format from file.
     '''
-
     G = Graph()
     with open(file,'r') as f:
         for line in f:
@@ -85,9 +94,7 @@ def read_adjlist(file: str) -> Graph:
         
 
 def write_adjlist(G: Graph, file: str) -> None:
-    '''Write graph G in single-line adjacency-list format to file.
-    '''
-
+    '''Write graph G in single-line adjacency-list format to file.'''
     file_path = os.path.join(os.path.dirname(__file__), file) 
     with open(file_path,'r') as f:
         for u in G.nodes():
