@@ -29,6 +29,15 @@ class Graph:
         ''' Devuelve el conjunto de nodos adyacentes al nodo dado. '''
         return self._E.get(vertex, set())  # Retorna los adyacentes o un conjunto vacío si no tiene aristas
     
+    def exists_edge(self, vertex_from, vertex_to)-> bool:
+        ''' Devuelve True/False si vertex_to se encuentra en la
+            lista de adyacencia de vertex_from
+        '''
+        if(self._E[vertex_from] in self.adj(self,vertex_to)):
+            return True
+        else:
+            return False
+        
     def _init_node(self, vertex) -> None:
         ''' Inicializa los atributos básicos de un nodo (color, padre, tiempo de descubrimiento y finalización). '''
         self._V[vertex] = {'color': 'WHITE', 'parent': None, 'd_time': None, 'f_time': None}
@@ -69,49 +78,68 @@ class Graph:
     
 
     def tarjan(self) -> List[List[str]]:
-        ''' Implementación del algoritmo de Tarjan para hallar componentes fuertemente conexas (SCC) '''
-        
-        index = 0  # Índice que marca el orden de descubrimiento en Tarjan
-        stack = []  # Pila para realizar seguimiento de nodos en la SCC
-        in_stack = set()  # Conjunto para verificar si un nodo está en la pila
-        scc_list = []  # Lista de SCCs encontradas
+        """
+        Implementación del algoritmo de Tarjan para encontrar las componentes fuertemente conexas (SCC).
+        Devuelve una lista de listas, donde cada lista representa una SCC.
+        """
+        # Paso 1: Realizar DFS en el grafo original y obtener el orden de finalización
+        nodes_sorted_by_finish_time = []
+        time = 0
 
-        # Inicializa índices y valores lowlink de cada nodo
-        for vertex in self.nodes():
-            self._V[vertex]['index'] = None
-            self._V[vertex]['lowlink'] = None
+        def dfs_visit_original(vertex):
+            nonlocal time
+            self._V[vertex]['color'] = 'GRAY'
+            self._V[vertex]['d_time'] = time = time + 1
 
-        def strongconnect(v):
-            ''' Realiza la conexión fuerte del nodo v y detecta componentes fuertemente conexas '''
-            nonlocal index
-            self._V[v]['index'] = index  # Asigna índice de descubrimiento
-            self._V[v]['lowlink'] = index  # Inicializa el lowlink
-            index += 1
-            stack.append(v)  # Agrega nodo a la pila
-            in_stack.add(v)  # Marca nodo en el conjunto de la pila
+            for adj in self.adj(vertex):
+                if self._V[adj]['color'] == 'WHITE':
+                    dfs_visit_original(adj)
 
-            for w in self.adj(v):  # Explora los adyacentes
-                if self._V[w]['index'] is None:  # Si w no fue descubierto, recursión
-                    strongconnect(w)
-                    self._V[v]['lowlink'] = min(self._V[v]['lowlink'], self._V[w]['lowlink'])
-                elif w in in_stack:  # Si w está en la pila, se considera para lowlink
-                    self._V[v]['lowlink'] = min(self._V[v]['lowlink'], self._V[w]['index'])
+            self._V[vertex]['color'] = 'BLACK'
+            self._V[vertex]['f_time'] = time = time + 1
+            nodes_sorted_by_finish_time.append(vertex)  # Agregar al final cuando termine
 
-            if self._V[v]['lowlink'] == self._V[v]['index']:  # Detecta componente fuertemente conexa
-                scc = []
-                while True:
-                    w = stack.pop()
-                    in_stack.remove(w)
-                    scc.append(w)
-                    if w == v:
-                        break
-                scc_list.append(scc)
+        # Inicializa los nodos como no visitados (color blanco)
+        for node in self.nodes():
+            self._V[node]['color'] = 'WHITE'
 
-        for v in self.nodes():  # Inicia Tarjan para cada nodo si no ha sido descubierto
-            if self._V[v]['index'] is None:
-                strongconnect(v)
+        # Ejecuta DFS en el grafo original
+        for node in self.nodes():
+            if self._V[node]['color'] == 'WHITE':
+                dfs_visit_original(node)
 
-        return scc_list
+        # Ordena los nodos por orden de finalización (inverso)
+        nodes_sorted_by_finish_time.reverse()
+
+        # Paso 2: Crear el grafo transpuesto
+        transposed_graph = graph_conjugate(self)
+
+        # Paso 3: Realizar DFS en el grafo transpuesto siguiendo el orden inverso
+        SCC = []  # Lista para almacenar las SCC encontradas
+
+        def dfs_visit_transposed(vertex, scc):
+            transposed_graph._V[vertex]['color'] = 'GRAY'
+            scc.append(vertex)  # Agregar el nodo a la SCC actual
+
+            for adj in transposed_graph.adj(vertex):
+                if transposed_graph._V[adj]['color'] == 'WHITE':
+                    dfs_visit_transposed(adj, scc)
+
+            transposed_graph._V[vertex]['color'] = 'BLACK'
+
+        # Inicializa los nodos del grafo transpuesto como no visitados
+        for node in transposed_graph.nodes():
+            transposed_graph._V[node]['color'] = 'WHITE'
+
+        # Ejecuta DFS en el grafo transpuesto
+        for node in nodes_sorted_by_finish_time:
+            if transposed_graph._V[node]['color'] == 'WHITE':
+                scc = []  # Nueva SCC
+                dfs_visit_transposed(node, scc)
+                SCC.append(scc)  # Agregar la SCC encontrada
+
+        return SCC
+
 
     def __str__(self) -> str:
         ''' Genera una representación en string del grafo mostrando los nodos y sus aristas en el formato solicitado. '''

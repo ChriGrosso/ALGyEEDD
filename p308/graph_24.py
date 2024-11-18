@@ -48,7 +48,6 @@ class Graph:
             return True
         else:
             return False
-        pass
         
     def _init_node(self, vertex) -> None:
         ''' Set vertex initial values'''
