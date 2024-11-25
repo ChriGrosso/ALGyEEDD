@@ -130,6 +130,12 @@ def graph_conjugate(G: Graph) -> Graph:
             transposed_graph.add_edge(adj_node, node)
     return transposed_graph
 
+def erdos_renys(n: int,m:float = 1.):
+    return
+
+def max_size_scc(n:int, m:float) -> Tuple[float,float]:
+    return
+
 # Ejemplo de uso
 G = Graph()
 G.add_edge("0", "1")
