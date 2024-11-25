@@ -1,5 +1,7 @@
 from typing import Set, List, Tuple, KeysView, Iterable
 from collections import deque
+import matplotlib.pyplot as plt
+import random
 
 class Graph:
     
@@ -130,11 +132,49 @@ def graph_conjugate(G: Graph) -> Graph:
             transposed_graph.add_edge(adj_node, node)
     return transposed_graph
 
-def erdos_renys(n: int,m:float = 1.):
-    return
+def erdos_renyi(n: int, m: float = 1.) -> Graph:
+    """
+    Devuelve un grafo aleatorio dirigido basado en el modelo Erdös-Rényi.
+    n: número de nodos del grafo.
+    m: número medio de vecinos por nodo.
+    
+    El número de vecinos se determina con una probabilidad p = m/n.
+    """
+    p = m / n  # Probabilidad de conexión
+    G = Graph()
+    for i in range(n):
+        G.add_node(str(i))  # Los nodos son cadenas "0", "1", ..., "n-1"
+    
+    for i in range(n):
+        for j in range(n):
+            if i != j and random.random() < p:  # Evitar bucles (i -> i)
+                G.add_edge(str(i), str(j))
+    return G
 
-def max_size_scc(n:int, m:float) -> Tuple[float,float]:
-    return
+
+def size_max_scc(n: int, m: float) -> Tuple[float, float]:
+    """
+    Genera un grafo dirigido aleatorio de parámetros n y m y calcula el tamaño de la mayor SCC.
+    Devuelve una tupla con el tamaño normalizado de la mayor SCC y el valor de m.
+    """
+    G = erdos_renyi(n, m)
+    sccs = G.tarjan()  # Obtiene todas las SCC
+    max_scc_size = max(len(scc) for scc in sccs)  # Tamaño de la mayor SCC
+    return max_scc_size / n, m  # Tamaño normalizado y m
+
+
+def grafica ( points , file =' percolation . png ') -> None :
+    ''' Genera una grafica en el fichero file '''
+
+    y , x = zip (* points ) # Desempaqueta los points
+
+    fig , ax = plt . subplots (1 , 1, figsize =(6 , 4) )
+    ax . scatter (x , y , alpha =0.6 , s =3)
+    ax . set_ylabel (f'Tamano normalizado mayor scc ')
+    ax . set_xlabel (f'Valor esperado de vecinos por nodo ')
+    ax . grid ()
+    plt . savefig ( file )
+     # plt . show ()
 
 # Ejemplo de uso
 G = Graph()
@@ -151,3 +191,14 @@ print()
 print(G)
 print()
 print(f"SCC: {G.tarjan()}")
+
+n = 1000  # Número de nodos en el grafo
+ms = [i * 0.1 for i in range(1, 50)]  # Valores de m de 0.1 a 5.0 en pasos de 0.1
+points = []
+
+for m in ms:
+    scc_size, m_value = size_max_scc(n, m)
+    points.append((scc_size, m_value))
+    print(f"m = {m_value:.2f}, tamaño normalizado mayor SCC = {scc_size:.4f}")
+
+grafica(points, 'percolation.png')
