@@ -82,64 +82,25 @@ class Graph:
         Implementación del algoritmo de Tarjan para encontrar las componentes fuertemente conexas (SCC).
         Devuelve una lista de listas, donde cada lista representa una SCC.
         """
-        # Paso 1: Realizar DFS en el grafo original y obtener el orden de finalización
-        nodes_sorted_by_finish_time = []
-        time = 0
+        # Paso 1: Realizar DFS en el grafo original para calcular tiempos de finalización
+        self.dfs()  # Realiza el recorrido DFS para llenar los tiempos de finalización
 
-        def dfs_visit_original(vertex):
-            nonlocal time
-            self._V[vertex]['color'] = 'GRAY'
-            self._V[vertex]['d_time'] = time = time + 1
-
-            for adj in self.adj(vertex):
-                if self._V[adj]['color'] == 'WHITE':
-                    dfs_visit_original(adj)
-
-            self._V[vertex]['color'] = 'BLACK'
-            self._V[vertex]['f_time'] = time = time + 1
-            nodes_sorted_by_finish_time.append(vertex)  # Agregar al final cuando termine
-
-        # Inicializa los nodos como no visitados (color blanco)
-        for node in self.nodes():
-            self._V[node]['color'] = 'WHITE'
-
-        # Ejecuta DFS en el grafo original
-        for node in self.nodes():
-            if self._V[node]['color'] == 'WHITE':
-                dfs_visit_original(node)
-
-        # Ordena los nodos por orden de finalización (inverso)
-        nodes_sorted_by_finish_time.reverse()
+        # Ordenar los nodos por tiempo de finalización (mayor a menor)
+        nodes_sorted_by_finish_time = sorted(
+            self._V.keys(),
+            key=lambda node: self._V[node]['f_time'],
+            reverse=True,
+        )
 
         # Paso 2: Crear el grafo transpuesto
         transposed_graph = graph_conjugate(self)
 
-        # Paso 3: Realizar DFS en el grafo transpuesto siguiendo el orden inverso
-        SCC = []  # Lista para almacenar las SCC encontradas
+        # Paso 3: Realizar DFS en el grafo transpuesto usando el orden inverso
+        # Cada componente del bosque DFS será una SCC
+        sccs = transposed_graph.dfs(nodes_sorted_by_finish_time)
 
-        def dfs_visit_transposed(vertex, scc):
-            transposed_graph._V[vertex]['color'] = 'GRAY'
-            scc.append(vertex)  # Agregar el nodo a la SCC actual
-
-            for adj in transposed_graph.adj(vertex):
-                if transposed_graph._V[adj]['color'] == 'WHITE':
-                    dfs_visit_transposed(adj, scc)
-
-            transposed_graph._V[vertex]['color'] = 'BLACK'
-
-        # Inicializa los nodos del grafo transpuesto como no visitados
-        for node in transposed_graph.nodes():
-            transposed_graph._V[node]['color'] = 'WHITE'
-
-        # Ejecuta DFS en el grafo transpuesto
-        for node in nodes_sorted_by_finish_time:
-            if transposed_graph._V[node]['color'] == 'WHITE':
-                scc = []  # Nueva SCC
-                dfs_visit_transposed(node, scc)
-                SCC.append(scc)  # Agregar la SCC encontrada
-
-        return SCC
-
+        # Convertir cada árbol del bosque en una lista simple de nodos
+        return [[node for node, _ in tree] for tree in sccs]
 
     def __str__(self) -> str:
         ''' Genera una representación en string del grafo mostrando los nodos y sus aristas en el formato solicitado. '''
