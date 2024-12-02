@@ -6,9 +6,7 @@ import random
 class Graph:
     
     def __init__(self):
-        # Diccionario para almacenar los nodos y sus atributos (color, padre, tiempos de descubrimiento y finalización)
         self._V = dict()  
-        # Diccionario para almacenar las aristas, cada nodo apunta a un conjunto de nodos adyacentes
         self._E = dict()  
     
     def add_node(self, vertex) -> None:
