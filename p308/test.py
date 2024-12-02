@@ -176,6 +176,45 @@ def grafica ( points , file =' percolation . png ') -> None :
     plt . savefig ( file )
      # plt . show ()
 
+def edit_distance(str_1: str, str_2: str) -> int:
+    """
+    Calcula la distancia de edición entre dos cadenas usando memoria optimizada.
+    Se permite insertar, eliminar o sustituir caracteres.
+    
+    :param str1: Primera cadena
+    :param str_2: Segunda cadena
+    :return: Distancia de edición mínima entre las dos cadenas
+    """
+    # Asegurarnos de que str1 sea la cadena más corta para minimizar memoria
+    if len(str_1) > len(str_2):
+        str_1, str_2 = str_2, str_1
+    
+    # Longitudes de las cadenas
+    len1, len2 = len(str_1), len(str_2)
+    
+    # Solo necesitamos dos filas: la actual y la previa
+    prev_row = list(range(len2 + 1))
+    current_row = [0] * (len2 + 1)
+    
+    # Iterar sobre cada carácter de la primera cadena
+    for i in range(1, len1 + 1):
+        current_row[0] = i  # Inicializar la primera columna
+        for j in range(1, len2 + 1):
+            # Si los caracteres coinciden, no hay costo adicional
+            cost = 0 if str_1[i - 1] == str_2[j - 1] else 1
+            # Calcular el mínimo costo entre: insertar, eliminar o sustituir
+            current_row[j] = min(
+                current_row[j - 1] + 1,   # Inserción
+                prev_row[j] + 1,         # Eliminación
+                prev_row[j - 1] + cost   # Sustitución
+            )
+        # Actualizar la fila previa
+        prev_row, current_row = current_row, prev_row
+    
+    # La distancia de edición está en la última posición de prev_row
+    return prev_row[-1]
+
+
 # Ejemplo de uso
 G = Graph()
 G.add_edge("0", "1")
@@ -202,3 +241,7 @@ for m in ms:
     print(f"m = {m_value:.2f}, tamaño normalizado mayor SCC = {scc_size:.4f}")
 
 grafica(points, 'percolation.png')
+
+# Calcular la distancia de edición entre "casa" y "calle"
+result = edit_distance("casa", "calle")
+print(f"Distancia de edición: {result}")
