@@ -21,20 +21,27 @@ def edit_distances(str_1: str, str_2: str) -> int:
 
 #II.A.2
 def max_subsequence_length(str_1: str, str_2: str)-> int:
-    eq=0
-    j=0
-    for i in range(len(str_1)):
-        if(str_1[i]==str_2[j]):
-            j+=1
-            eq+=1
-        elif(str_1[i-1]==str_2[j]):
-            i=i-1
-        elif(str_1[i]==str_2[j-1]):
-            j=j-1
-        else:
-            i-=1
-            j-=1
-    return eq
+    """
+    Calcula la longitud de la subsecuencia común más larga (LCS) entre dos cadenas.
+    Utiliza una cantidad mínima de memoria.
+    """
+    n, m = len(str_1), len(str_2)
+    # Variabile per memorizzare l'LCS attuale
+    current = 0
+
+    for i in range(n):
+        prev_diagonal = 0  # Valore della cella diagonale precedente
+        prev_col = 0      # Valore della cella precedente nella stessa riga
+        for j in range(m):
+            temp = prev_col  # Conserviamo il valore corrente della colonna
+            if str_1[i] == str_2[j]:
+                prev_col = prev_diagonal + 1  # Incremento in caso di match
+            else:
+                prev_col = max(prev_col, current)  # Calcolo del massimo
+            prev_diagonal = temp  # Aggiorniamo la diagonale
+            current = prev_col  # Memorizziamo il valore attuale
+
+    return current
     
 
 #II.A.3
@@ -46,4 +53,4 @@ def max_common_subsequence(str_1: str, str_2: str) -> str:
 #     pass
 
 edit_distances("casa","calle")
-max_subsequence_length("biscuit","suitcase")
+max_subsequence_length("biscuit","biscuit")
