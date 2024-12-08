@@ -1,6 +1,6 @@
 from typing import Set, List, Tuple, KeysView, Iterable
 from collections import deque
-import matplotlib.pyplot as plt
+'''import matplotlib.pyplot as plt'''
 import random
 
 class Graph:
@@ -31,8 +31,7 @@ class Graph:
     
     def exists_edge(self, vertex_from, vertex_to)-> bool:
         ''' Devuelve True/False si vertex_to se encuentra en la
-            lista de adyacencia de vertex_from
-        '''
+            lista de adyacencia de vertex_from'''
         if(self._E[vertex_from] in self.adj(self,vertex_to)):
             return True
         else:
