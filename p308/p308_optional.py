@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from typing import List, Tuple  # Importar los tipos necesarios
-from graph_24 import size_max_scc, erdos_renyi
+from p308 import size_max_scc
 
 def compute_confidence_intervals(n: int, m_values: List[float], n_rep: int) -> List[Tuple[float, float, float]]:
     """
