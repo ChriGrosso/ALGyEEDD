@@ -1,6 +1,5 @@
 from typing import Set, List, Generator, Tuple, KeysView, Iterable
 import os
-import random
 import matplotlib.pyplot as plt
 
 class Graph:

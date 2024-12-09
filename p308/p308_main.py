@@ -135,4 +135,52 @@ def grafica ( points , file =' percolation . png ') -> None :
     ax.set_xlabel (f'Valor esperado de vecinos por nodo ')
     ax.grid ()
     plt . savefig ( file )
-    #plt . show ()
+    plt . show ()
+
+if __name__ == '__main__':
+    G = g.Graph()
+    G. add_edge (0, 1)
+    G. add_edge (2, 1)
+    G. add_edge (1, 4)
+    G. add_edge (4, 3)
+    G. add_edge (5, 4)
+    G. add_edge (3, 0)
+    G. add_edge (5, 2)
+
+    print (G)
+
+    print('Nodes:')
+    print(G.nodes())
+    print('Adyacentesnodo5')
+    print(G.adj(5))
+    print('¿Es 2 adyacente de 5?')
+    print(G.exists_edge(5,2))
+    print('¿Es 3 adyacente de 5?')
+    print(G.exists_edge(5,3))
+
+    print (f' DFS forest : {G.dfs ()} ')
+    print ()
+    print (G)
+    print ()
+    print (f' scc : {G . tarjan ()} ')
+
+    
+    n = 1000  # Número de nodos en el grafo
+    ms = [i * 0.01 for i in range(10, 500)]  # Valores de m de 0.1 a 5.0 en pasos de 0.1
+    points = []
+
+    for m in ms:
+        scc_size, m_value = size_max_scc(n, m)
+        points.append((scc_size, m_value))
+        print(f"m = {m_value:.2f}, tamaño normalizado mayor SCC = {scc_size:.4f}")
+
+    grafica(points, 'percolation.png')
+
+    print(edit_distance("casa", "calle"))  # Salida: 3
+    print(max_subsequence_length("abcde", "ace"))  # Salida: 3
+    print(max_common_subsequence("abcde", "ace"))  # Salida: "ace"
+
+    # Dimensiones de matrices: M1 (2x1), M2 (1x3), M3 (3x4)
+    l_dims = [2,1,3,4]
+    # Calcular el costo mínimo
+    print(min_mult_matrix(l_dims))  # Salida: 30000
